@@ -4,94 +4,254 @@
     <title>Cafeteria</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: Arial; max-width: 500px; margin: 0 auto; padding: 20px; }
-        .section { background: white; padding: 20px; margin: 10px 0; border-radius: 10px; text-align: center; }
-        button { background: #4CAF50; color: white; padding: 15px; border: none; border-radius: 8px; width: 100%; font-size: 18px; margin: 10px 0; }
-        .btn-bank { background: #2196F3; color: white; padding: 15px; border: none; border-radius: 8px; width: 100%; font-size: 18px; margin: 5px 0; }
-        input { width: 100%; padding: 10px; margin: 5px 0; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 500px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #f8f9fa; 
+        }
+        .container { 
+            background: white; 
+            padding: 0; 
+            border-radius: 15px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+        }
+        .header { 
+            background: #4CAF50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        .produits { 
+            padding: 20px; 
+        }
+        .produit { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 0; 
+            border-bottom: 1px solid #eee; 
+        }
+        .produit:last-child { 
+            border-bottom: none; 
+        }
+        .quantite input { 
+            width: 50px; 
+            padding: 8px; 
+            text-align: center; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+        }
+        .total-section { 
+            background: #e8f5e8; 
+            padding: 20px; 
+            text-align: center; 
+            border-top: 2px solid #4CAF50; 
+        }
+        .btn { 
+            background: #4CAF50; 
+            color: white; 
+            padding: 16px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            width: 100%; 
+            margin-top: 10px; 
+        }
+        .btn:hover { 
+            background: #45a049; 
+        }
+        h3 { 
+            color: #333; 
+            margin: 20px 0 10px 0; 
+            padding-bottom: 5px; 
+            border-bottom: 2px solid #4CAF50; 
+        }
+        .prix { 
+            color: #4CAF50; 
+            font-weight: bold; 
+        }
     </style>
 </head>
 <body>
-    <div class="section">
-        <h2>🍕 Commande Cafeteria</h2>
-        <input type="text" id="nom" placeholder="Ton nom" required>
-        
-        <div>
-            <input type="number" id="chips" placeholder="Chips (1€)" min="0" value="0">
-            <input type="number" id="bueno" placeholder="Bueno (1€)" min="0" value="0">
-            <input type="number" id="soda" placeholder="Soda (1€)" min="0" value="0">
+    <div class="container">
+        <div class="header">
+            <h1>🍕 Cafeteria</h1>
+            <p>Commande & Paiement</p>
         </div>
         
-        <button onclick="afficherPaiement()">💳 Payer</button>
+        <div class="produits">
+            <div>
+                <label><strong>Nom :</strong></label>
+                <input type="text" id="nom" placeholder="Votre nom" required 
+                       style="width: 100%; padding: 12px; margin: 8px 0 20px 0; border: 1px solid #ddd; border-radius: 8px;">
+            </div>
+            
+            <h3>🍽️ Manger</h3>
+            <div class="produit">
+                <span>Chips</span>
+                <span class="prix">1,00 €</span>
+                <div class="quantite">
+                    <input type="number" id="chips" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Muffins</span>
+                <span class="prix">2,40 €</span>
+                <div class="quantite">
+                    <input type="number" id="muffins" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Bueno</span>
+                <span class="prix">1,00 €</span>
+                <div class="quantite">
+                    <input type="number" id="bueno" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Gaufre nature</span>
+                <span class="prix">2,00 €</span>
+                <div class="quantite">
+                    <input type="number" id="gaufre_nature" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Gaufre choco</span>
+                <span class="prix">2,50 €</span>
+                <div class="quantite">
+                    <input type="number" id="gaufre_choco" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Lion</span>
+                <span class="prix">0,80 €</span>
+                <div class="quantite">
+                    <input type="number" id="lion" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Compote</span>
+                <span class="prix">0,60 €</span>
+                <div class="quantite">
+                    <input type="number" id="compote" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Muesli</span>
+                <span class="prix">0,50 €</span>
+                <div class="quantite">
+                    <input type="number" id="muesli" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            
+            <h3>🥤 Boire</h3>
+            <div class="produit">
+                <span>Soda</span>
+                <span class="prix">1,00 €</span>
+                <div class="quantite">
+                    <input type="number" id="soda" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>CARA NRG</span>
+                <span class="prix">0,60 €</span>
+                <div class="quantite">
+                    <input type="number" id="cara" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Rodeo</span>
+                <span class="prix">0,70 €</span>
+                <div class="quantite">
+                    <input type="number" id="rodeo" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Jus</span>
+                <span class="prix">0,50 €</span>
+                <div class="quantite">
+                    <input type="number" id="jus" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+            <div class="produit">
+                <span>Capri Sun</span>
+                <span class="prix">0,60 €</span>
+                <div class="quantite">
+                    <input type="number" id="capri" min="0" max="10" value="0" onchange="calculerTotal()">
+                </div>
+            </div>
+        </div>
+        
+        <div class="total-section">
+            <h2>Total : <span id="total">0,00</span> €</h2>
+            <button class="btn" onclick="validerCommande()">💳 Commander & Payer</button>
+        </div>
     </div>
 
     <script>
+        const prix = {
+            chips: 1.00, muffins: 2.40, bueno: 1.00, gaufre_nature: 2.00, gaufre_choco: 2.50,
+            lion: 0.80, compote: 0.60, muesli: 0.50, soda: 1.00, cara: 0.60, 
+            rodeo: 0.70, jus: 0.50, capri: 0.60
+        };
+
         function calculerTotal() {
-            return (document.getElementById('chips').value * 1) + 
-                   (document.getElementById('bueno').value * 1) + 
-                   (document.getElementById('soda').value * 1);
+            let total = 0;
+            Object.keys(prix).forEach(produit => {
+                total += (parseInt(document.getElementById(produit).value) || 0) * prix[produit];
+            });
+            document.getElementById('total').textContent = total.toFixed(2).replace('.', ',');
+            return total;
         }
 
-        function afficherPaiement() {
+        function validerCommande() {
             const nom = document.getElementById('nom').value;
             const total = calculerTotal();
-            const code = 'CAFE' + Math.floor(1000 + Math.random() * 9000);
             
-            if(!nom) return alert("Met ton nom !");
-            if(total == 0) return alert("Choisis au moins un produit !");
+            if (!nom) {
+                alert("Veuillez entrer votre nom");
+                return;
+            }
+            
+            if (total === 0) {
+                alert("Veuillez sélectionner au moins un produit");
+                return;
+            }
+            
+            const code = 'CAFE' + Math.floor(1000 + Math.random() * 9000);
             
             document.body.innerHTML = `
-                <div class="section">
-                    <h2>🎉 ${nom}, paye ${total}€</h2>
-                    
-                    <!-- BOUTON POUR OUVRIR L'APP BANCAIRE -->
-                    <button class="btn-bank" onclick="ouvrirAppBancaire()">
-                        🏦 Ouvrir mon app bancaire
-                    </button>
-                    
-                    <p><em>Si ça ne marche pas, utilise Payconiq :</em></p>
-                    
-                    <!-- QR CODE PAYCONIQ -->
-                    <div style="margin: 20px 0;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=payconiq://pay?amount=${total * 100}&reference=${code}" 
-                             alt="QR Code Payconiq" style="border: 2px solid #ddd; border-radius: 10px; padding: 10px;">
-                        <p>Scanne avec <strong>Payconiq</strong></p>
+                <div class="container">
+                    <div class="header" style="background: #2196F3;">
+                        <h1>🎉 Commande validée !</h1>
+                        <p>${nom}</p>
                     </div>
                     
-                    <!-- INFORMATIONS MANUELLES -->
-                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                        <p><strong>Ou copie ces infos :</strong></p>
-                        <p>Montant: <strong>${total}€</strong></p>
-                        <p>Code: <strong>${code}</strong></p>
+                    <div style="padding: 30px; text-align: center;">
+                        <div style="background: #e8f5e8; padding: 25px; border-radius: 10px; margin: 20px 0;">
+                            <h1 style="font-size: 42px; color: #4CAF50; margin: 0;">${total.toFixed(2).replace('.', ',')} €</h1>
+                            <p style="font-size: 20px; margin: 10px 0;">Code : <strong>${code}</strong></p>
+                        </div>
+                        
+                        <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                            <h3>📱 Comment payer :</h3>
+                            <p>1. <strong>Ouvrez votre app bancaire</strong></p>
+                            <p>2. <strong>Montant</strong> : ${total.toFixed(2).replace('.', ',')} €</p>
+                            <p>3. <strong>Communication</strong> : ${code}</p>
+                            <p>4. <strong>Confirmez</strong> le paiement</p>
+                        </div>
+                        
+                        <button class="btn" onclick="window.location.reload()" style="background: #666;">
+                            🔄 Nouvelle commande
+                        </button>
                     </div>
-                    
-                    <button onclick="window.location.reload()">🔄 Nouvelle commande</button>
                 </div>
             `;
-        }
-
-        function ouvrirAppBancaire() {
-            const total = calculerTotal();
-            const code = 'CAFE' + Math.floor(1000 + Math.random() * 9000);
-            
-            // ESSAIER DIFFÉRENTES APPLIS
-            const apps = [
-                { nom: "Bancontact", url: `bancontact://pay?amount=${total * 100}&reference=${code}` },
-                { nom: "Payconiq", url: `payconiq://pay?amount=${total * 100}&reference=${code}` },
-                { nom: "Belfius", url: `belfiuspay://pay?amount=${total}&communication=${code}` },
-                { nom: "KBC", url: `kbc://payment?amount=${total}&description=${code}` }
-            ];
-            
-            // Essayer d'ouvrir une app
-            for(let app of apps) {
-                try {
-                    window.location.href = app.url;
-                    console.log("Tentative d'ouverture : " + app.nom);
-                    break;
-                } catch(e) {
-                    continue;
-                }
-            }
         }
     </script>
 </body>
