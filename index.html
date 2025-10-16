@@ -8,11 +8,12 @@
         .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .produit { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
         .btn { background: #4CAF50; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 20px; width: 100%; }
-        .btn-bancontact { background: #FF6B00; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin: 10px 0; width: 100%; }
+        .btn-copy { background: #2196F3; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px; }
         .total { font-size: 24px; font-weight: bold; text-align: center; margin: 20px 0; color: #2c5aa0; }
         input[type="number"] { width: 60px; padding: 8px; text-align: center; }
         input[type="text"] { width: 100%; padding: 10px; margin: 10px 0; }
-        .info-box { background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
+        .info-box { background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .copy-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0; border-left: 4px solid #2196F3; }
     </style>
 </head>
 <body>
@@ -81,34 +82,51 @@
                 <h1>🎉 Commande confirmée !</h1>
                 
                 <div class="info-box">
-                    <p><strong>${nom}</strong></p>
+                    <p><strong>${nom}</strong>, votre commande est prête !</p>
                     <p style="font-size: 32px; font-weight: bold; color: #2c5aa0;">€${total.toFixed(2)}</p>
                     <p>Code : <strong style="font-size: 20px;">${code}</strong></p>
                 </div>
                 
                 <div style="text-align: center; margin: 30px 0;">
-                    <h3>📱 TEST Bancontact :</h3>
-                    
-                    <button class="btn-bancontact" onclick="testBancontact(${total}, '${code}', '${votreIBAN}')">
-                        🏦 ESSAYER d'ouvrir Bancontact
-                    </button>
-                    
-                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                        <p><strong>Ce qui devrait se passer :</strong></p>
-                        <p>📱 <strong>Android</strong> : Bancontact s'ouvre directement</p>
-                        <p>📱 <strong>iPhone</strong> : "Ouvrir avec Bancontact?"</p>
-                        <p>❌ <strong>Échec</strong> : Message d'erreur</p>
-                    </div>
+                    <h3>📱 Pour payer :</h3>
                     
                     <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0;">
-                        <p><strong>Informations manuelles (fallback) :</strong></p>
-                        <p>Montant: <strong>€${total.toFixed(2)}</strong></p>
-                        <p>Communication: <strong>${code}</strong></p>
-                        <p>IBAN: <strong>${votreIBAN}</strong></p>
+                        <p><strong>Étapes simples :</strong></p>
+                        <p>1. <strong>Ouvrez votre app bancaire</strong></p>
+                        <p>2. <strong>Copiez-collez</strong> les informations ci-dessous</p>
+                        <p>3. <strong>Confirmez</strong> le paiement</p>
+                    </div>
+                    
+                    <div class="copy-box">
+                        <p><strong>Montant à payer :</strong></p>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <input type="text" id="montant-copy" value="€${total.toFixed(2)}" readonly 
+                                   style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 18px; width: 120px;">
+                            <button class="btn-copy" onclick="copierMontant()">📋 Copier</button>
+                        </div>
+                    </div>
+                    
+                    <div class="copy-box">
+                        <p><strong>Code de communication :</strong></p>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <input type="text" id="code-copy" value="${code}" readonly 
+                                   style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 16px; width: 150px;">
+                            <button class="btn-copy" onclick="copierCode()">📋 Copier</button>
+                        </div>
+                    </div>
+                    
+                    <div class="copy-box">
+                        <p><strong>Votre IBAN :</strong></p>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            <input type="text" id="iban-copy" value="${votreIBAN}" readonly 
+                                   style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 14px; width: 200px;">
+                            <button class="btn-copy" onclick="copierIBAN()">📋 Copier</button>
+                        </div>
                     </div>
                 </div>
                 
-                <div style="text-align: center;">
+                <div style="text-align: center; margin-top: 30px;">
+                    <p style="color: #666;">Votre commande sera prête dans 5 minutes ! ⏱️</p>
                     <button class="btn" onclick="window.location.reload()">🔄 Nouvelle commande</button>
                 </div>
             `;
@@ -116,63 +134,25 @@
             document.querySelector('.container').innerHTML = resultat;
         }
 
-        function testBancontact(total, code, iban) {
-            console.log("🚀 TEST Bancontact démarré...");
-            
-            // FORMATS DE LIENS BANCONTACT À TESTER
-            var liens = [
-                {
-                    nom: "Format Bancontact officiel",
-                    url: `bancontact://pay?amount=${Math.round(total * 100)}&reference=${code}&creditor=${iban}&creditorName=CAFETERIA`
-                },
-                {
-                    nom: "Format BCE/KBC", 
-                    url: `bce://payment?amount=${total}&message=${code}&receiver=${iban}`
-                },
-                {
-                    nom: "Format URL Bancontact",
-                    url: `https://bancontact.com/pay?amount=${total}&reference=${code}`
-                },
-                {
-                    nom: "Format Intent Android",
-                    url: `intent://pay?amount=${total}&reference=${code}#Intent;scheme=bancontact;package=com.bancontact.mobile;end;`
-                }
-            ];
-            
-            // Essayer chaque lien
-            for (var i = 0; i < liens.length; i++) {
-                console.log("Essai " + (i+1) + ": " + liens[i].nom);
-                console.log("URL: " + liens[i].url);
-                
-                try {
-                    // Créer un lien invisible et cliquer dessus (plus fiable)
-                    var link = document.createElement('a');
-                    link.href = liens[i].url;
-                    link.style.display = 'none';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    console.log("✅ Lien accepté : " + liens[i].nom);
-                    
-                    // Attendre un peu pour voir si ça fonctionne
-                    setTimeout(function() {
-                        // Si on est toujours sur la page, essayer le lien suivant
-                        if (i === liens.length - 1) {
-                            alert("Bancontact n'a pas répondu. Essayez manuellement.");
-                        }
-                    }, 1000);
-                    
-                    return; // Sortir après le premier essai
-                    
-                } catch (e) {
-                    console.log("❌ Échec : " + liens[i].nom);
-                    // Continuer avec le lien suivant
-                }
-            }
-            
-            // Si aucun lien ne fonctionne
-            alert("❌ Aucun format de lien n'a fonctionné. Ouvrez Bancontact manuellement.");
+        function copierMontant() {
+            var copyText = document.getElementById("montant-copy");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Montant copié !");
+        }
+
+        function copierCode() {
+            var copyText = document.getElementById("code-copy");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Code copié !");
+        }
+
+        function copierIBAN() {
+            var copyText = document.getElementById("iban-copy");
+            copyText.select();
+            document.execCommand("copy");
+            alert("IBAN copié !");
         }
     </script>
 </body>
