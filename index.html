@@ -8,9 +8,11 @@
         .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         .produit { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
         .btn { background: #4CAF50; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 20px; width: 100%; }
+        .btn-bancontact { background: #FF6B00; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; margin: 10px 0; width: 100%; }
         .total { font-size: 24px; font-weight: bold; text-align: center; margin: 20px 0; color: #2c5aa0; }
         input[type="number"] { width: 60px; padding: 8px; text-align: center; }
         input[type="text"] { width: 100%; padding: 10px; margin: 10px 0; }
+        .info-box { background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center; }
     </style>
 </head>
 <body>
@@ -32,56 +34,145 @@
             <input type="number" id="bueno" min="0" max="10" value="0" onchange="calculerTotal()">
         </div>
         <div class="produit">
+            <span>Gaufre nature (2€)</span>
+            <input type="number" id="gaufre_nature" min="0" max="10" value="0" onchange="calculerTotal()">
+        </div>
+        <div class="produit">
+            <span>Gaufre choco (2.5€)</span>
+            <input type="number" id="gaufre_choco" min="0" max="10" value="0" onchange="calculerTotal()">
+        </div>
+        
+        <h3>🥤 Boire</h3>
+        <div class="produit">
             <span>Soda (1€)</span>
             <input type="number" id="soda" min="0" max="10" value="0" onchange="calculerTotal()">
         </div>
         
         <div class="total" id="total">Total : €0.00</div>
         
-        <button class="btn" onclick="commander()">💳 Commander et payer</button>
-        
-        <p style="text-align: center; color: #666; margin-top: 20px;">
-            Le paiement s'ouvrira dans votre application bancaire
-        </p>
+        <button class="btn" onclick="afficherPaiement()">💳 Commander et payer</button>
     </div>
 
     <script>
+        const prix = {
+            chips: 1.00, bueno: 1.00, gaufre_nature: 2.00, gaufre_choco: 2.50, soda: 1.00
+        };
+
         function calculerTotal() {
-            var chips = parseInt(document.getElementById('chips').value) || 0;
-            var bueno = parseInt(document.getElementById('bueno').value) || 0;
-            var soda = parseInt(document.getElementById('soda').value) || 0;
-            
-            var total = chips * 1 + bueno * 1 + soda * 1;
+            let total = 0;
+            Object.keys(prix).forEach(produit => {
+                total += (parseInt(document.getElementById(produit).value) || 0) * prix[produit];
+            });
             document.getElementById('total').textContent = 'Total : €' + total.toFixed(2);
             return total;
         }
 
-        function commander() {
+        function afficherPaiement() {
             var nom = document.getElementById('nom').value;
             var total = calculerTotal();
             
-            if (!nom) {
-                alert("Veuillez entrer votre nom");
-                return;
-            }
+            if (!nom) return alert("Veuillez entrer votre nom");
+            if (total === 0) return alert("Veuillez sélectionner au moins un produit");
             
-            if (total === 0) {
-                alert("Veuillez sélectionner au moins un produit");
-                return;
-            }
-            
-            // VOTRE IBAN - REMPLACEZ-LE !
-            var votreIBAN = "BE71123456789012";
+            var votreIBAN = "BE71123456789012"; // ⚠️ REMPLACEZ PAR VOTRE IBAN
             var code = 'CAFE' + Math.floor(1000 + Math.random() * 9000);
             
-            // Lien de paiement
-            var lien = 'https://connect.banking/transfer?amount=' + total.toFixed(2) + 
-                       '&message=' + code + 
-                       '&recipient=' + votreIBAN + 
-                       '&name=CAFETERIA';
+            var resultat = `
+                <h1>🎉 Commande confirmée !</h1>
+                
+                <div class="info-box">
+                    <p><strong>${nom}</strong></p>
+                    <p style="font-size: 32px; font-weight: bold; color: #2c5aa0;">€${total.toFixed(2)}</p>
+                    <p>Code : <strong style="font-size: 20px;">${code}</strong></p>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <h3>📱 TEST Bancontact :</h3>
+                    
+                    <button class="btn-bancontact" onclick="testBancontact(${total}, '${code}', '${votreIBAN}')">
+                        🏦 ESSAYER d'ouvrir Bancontact
+                    </button>
+                    
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <p><strong>Ce qui devrait se passer :</strong></p>
+                        <p>📱 <strong>Android</strong> : Bancontact s'ouvre directement</p>
+                        <p>📱 <strong>iPhone</strong> : "Ouvrir avec Bancontact?"</p>
+                        <p>❌ <strong>Échec</strong> : Message d'erreur</p>
+                    </div>
+                    
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <p><strong>Informations manuelles (fallback) :</strong></p>
+                        <p>Montant: <strong>€${total.toFixed(2)}</strong></p>
+                        <p>Communication: <strong>${code}</strong></p>
+                        <p>IBAN: <strong>${votreIBAN}</strong></p>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="btn" onclick="window.location.reload()">🔄 Nouvelle commande</button>
+                </div>
+            `;
             
-            // Redirection
-            window.location.href = lien;
+            document.querySelector('.container').innerHTML = resultat;
+        }
+
+        function testBancontact(total, code, iban) {
+            console.log("🚀 TEST Bancontact démarré...");
+            
+            // FORMATS DE LIENS BANCONTACT À TESTER
+            var liens = [
+                {
+                    nom: "Format Bancontact officiel",
+                    url: `bancontact://pay?amount=${Math.round(total * 100)}&reference=${code}&creditor=${iban}&creditorName=CAFETERIA`
+                },
+                {
+                    nom: "Format BCE/KBC", 
+                    url: `bce://payment?amount=${total}&message=${code}&receiver=${iban}`
+                },
+                {
+                    nom: "Format URL Bancontact",
+                    url: `https://bancontact.com/pay?amount=${total}&reference=${code}`
+                },
+                {
+                    nom: "Format Intent Android",
+                    url: `intent://pay?amount=${total}&reference=${code}#Intent;scheme=bancontact;package=com.bancontact.mobile;end;`
+                }
+            ];
+            
+            // Essayer chaque lien
+            for (var i = 0; i < liens.length; i++) {
+                console.log("Essai " + (i+1) + ": " + liens[i].nom);
+                console.log("URL: " + liens[i].url);
+                
+                try {
+                    // Créer un lien invisible et cliquer dessus (plus fiable)
+                    var link = document.createElement('a');
+                    link.href = liens[i].url;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    console.log("✅ Lien accepté : " + liens[i].nom);
+                    
+                    // Attendre un peu pour voir si ça fonctionne
+                    setTimeout(function() {
+                        // Si on est toujours sur la page, essayer le lien suivant
+                        if (i === liens.length - 1) {
+                            alert("Bancontact n'a pas répondu. Essayez manuellement.");
+                        }
+                    }, 1000);
+                    
+                    return; // Sortir après le premier essai
+                    
+                } catch (e) {
+                    console.log("❌ Échec : " + liens[i].nom);
+                    // Continuer avec le lien suivant
+                }
+            }
+            
+            // Si aucun lien ne fonctionne
+            alert("❌ Aucun format de lien n'a fonctionné. Ouvrez Bancontact manuellement.");
         }
     </script>
 </body>
