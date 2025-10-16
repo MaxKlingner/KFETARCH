@@ -29,14 +29,21 @@
             padding: 20px; 
         }
         .produit { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 0; 
-            border-bottom: 1px solid #eee; 
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            gap: 15px;
         }
         .produit:last-child { 
             border-bottom: none; 
+        }
+        .prix {
+            color: #4CAF50;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: right;
         }
         .quantite input { 
             width: 50px; 
@@ -70,10 +77,6 @@
             margin: 20px 0 10px 0; 
             padding-bottom: 5px; 
             border-bottom: 2px solid #4CAF50; 
-        }
-        .prix { 
-            color: #4CAF50; 
-            font-weight: bold; 
         }
     </style>
 </head>
