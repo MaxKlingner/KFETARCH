@@ -14,14 +14,14 @@ html, body {
     font-family: Arial, sans-serif;
     color: white;
     overflow: hidden;
-    font-size: 16px; /* BLOQUE LE ZOOM AUTOMATIQUE */
+    font-size: 16px;
 }
 
 /* ===== CONTAINER PRINCIPAL ===== */
 .app-container {
     width: 100vw;
     height: 100vh;
-    height: 100dvh; /* Pour mobile */
+    height: 100dvh;
     background: #1a1a1a;
     padding: 20px;
     display: flex;
@@ -49,9 +49,10 @@ header h2 {
 .commandes-section {
     flex: 1;
     overflow-y: auto;
+    padding-bottom: 20px;
 }
 
-/* ===== ITEMS DE COMMANDE - ALIGNEMENT PARFAIT ===== */
+/* ===== ITEMS DE COMMANDE ===== */
 .commande-item {
     display: flex;
     justify-content: space-between;
@@ -70,15 +71,52 @@ header h2 {
     color: #fff;
 }
 
-.quantite {
-    width: 40px;
+/* ===== CONTROLES QUANTITE ===== */
+.quantite-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 15px;
+}
+
+.quantite-input {
+    width: 50px;
+    height: 40px;
     text-align: center;
-    font-size: 16px;
-    color: #ccc;
+    font-size: 18px;
     background: #333;
-    padding: 4px;
-    border-radius: 4px;
-    margin: 0 10px;
+    border: 2px solid #444;
+    border-radius: 6px;
+    color: white;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+/* Cache les flèches sur les inputs number */
+.quantite-input::-webkit-outer-spin-button,
+.quantite-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-moins, .btn-plus {
+    width: 40px;
+    height: 40px;
+    background: #4CAF50;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-moins:active, .btn-plus:active {
+    background: #45a049;
+    transform: scale(0.95);
 }
 
 .prix {
@@ -105,6 +143,7 @@ header h2 {
     border-radius: 8px;
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 15px;
 }
 
 .total-prix {
@@ -112,13 +151,24 @@ header h2 {
     font-size: 20px;
 }
 
-/* ===== POUR LES CHAMPS DE SAISIE ===== */
-input, select, textarea {
-    font-size: 16px !important; /* EMPÊCHE LE ZOOM iOS */
-    transform: scale(1) !important;
+.btn-valider {
+    width: 100%;
+    padding: 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-/* ===== SCROLLBAR POUR MOBILE ===== */
+.btn-valider:active {
+    background: #45a049;
+    transform: scale(0.98);
+}
+
+/* ===== SCROLLBAR ===== */
 .commandes-section::-webkit-scrollbar {
     width: 5px;
 }
