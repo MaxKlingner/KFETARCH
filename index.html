@@ -14,32 +14,57 @@
         </header>
 
         <div class="commandes-section">
-            <!-- Exemple d'item de commande BIEN ALIGNÉ -->
+            <!-- Produits avec quantités modifiables -->
             <div class="commande-item">
                 <span class="nom-produit">Café Noir</span>
-                <span class="quantite">1</span>
-                <span class="prix">2.50 €</span>
+                <div class="quantite-controls">
+                    <button class="btn-moins" onclick="changeQuantite('cafe', -1)">-</button>
+                    <input type="number" id="cafe" class="quantite-input" value="0" min="0" readonly>
+                    <button class="btn-plus" onclick="changeQuantite('cafe', 1)">+</button>
+                </div>
+                <span class="prix" data-prix="2.50">0.00 €</span>
             </div>
             
             <div class="commande-item">
-                <span class="nom-produit">Sandwich Poulet Curry</span>
-                <span class="quantite">1</span>
-                <span class="prix">5.20 €</span>
+                <span class="nom-produit">Sandwich Poulet</span>
+                <div class="quantite-controls">
+                    <button class="btn-moins" onclick="changeQuantite('sandwich', -1)">-</button>
+                    <input type="number" id="sandwich" class="quantite-input" value="0" min="0" readonly>
+                    <button class="btn-plus" onclick="changeQuantite('sandwich', 1)">+</button>
+                </div>
+                <span class="prix" data-prix="5.20">0.00 €</span>
             </div>
             
             <div class="commande-item">
                 <span class="nom-produit">Croissant</span>
-                <span class="quantite">2</span>
-                <span class="prix">1.80 €</span>
+                <div class="quantite-controls">
+                    <button class="btn-moins" onclick="changeQuantite('croissant', -1)">-</button>
+                    <input type="number" id="croissant" class="quantite-input" value="0" min="0" readonly>
+                    <button class="btn-plus" onclick="changeQuantite('croissant', 1)">+</button>
+                </div>
+                <span class="prix" data-prix="1.80">0.00 €</span>
+            </div>
+            
+            <div class="commande-item">
+                <span class="nom-produit">Eau Minérale</span>
+                <div class="quantite-controls">
+                    <button class="btn-moins" onclick="changeQuantite('eau', -1)">-</button>
+                    <input type="number" id="eau" class="quantite-input" value="0" min="0" readonly>
+                    <button class="btn-plus" onclick="changeQuantite('eau', 1)">+</button>
+                </div>
+                <span class="prix" data-prix="1.20">0.00 €</span>
             </div>
         </div>
 
         <div class="total-section">
             <div class="total-ligne">
                 <span>TOTAL</span>
-                <span class="total-prix">9.50 €</span>
+                <span class="total-prix" id="total-prix">0.00 €</span>
             </div>
+            <button class="btn-valider" onclick="validerCommande()">VALIDER LA COMMANDE</button>
         </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
